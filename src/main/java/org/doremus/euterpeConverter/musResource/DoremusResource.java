@@ -1,17 +1,17 @@
-package org.doremus.euterpeConverter.main;
+package org.doremus.euterpeConverter.musResource;
 
 
-import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.DCTerms;
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.doremus.euterpeConverter.main.ConstructURI;
+import org.doremus.euterpeConverter.main.Converter;
 import org.doremus.euterpeConverter.ontology.CIDOC;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 
 public abstract class DoremusResource {
@@ -21,23 +21,24 @@ public abstract class DoremusResource {
   protected Model model;
   protected URI uri;
   protected Resource resource;
-//  protected Record record;
+  //  protected Record record;
   protected String identifier;
   protected Resource publisher;
 
-  public DoremusResource(String identifier) throws URISyntaxException {
-    this.identifier = identifier;
+  public DoremusResource() {
+    // do nothing, enables customisation for child class
     this.model = ModelFactory.createDefaultModel();
+    this.className = this.getClass().getSimpleName();
+    this.publisher = Converter.Philharmonie;
+  }
+
+  public DoremusResource(String identifier) throws URISyntaxException {
+    this();
+    this.identifier = identifier;
 
     /* generate URI */
     this.className = this.getClass().getSimpleName();
-    this.sourceDb = "bnf";
-    if (this.className.startsWith("P")) {
-      this.sourceDb = "pp";
-      this.className = this.className.substring(1);
-//      this.publisher = model.createResource(PP2RDF.organizationURI);
-    } else
-//      this.publisher = model.createResource(BNF2RDF.organizationURI);
+    this.sourceDb = "ppe";
 
     this.resource = null;
     /* create RDF resource */
@@ -62,6 +63,13 @@ public abstract class DoremusResource {
 //    this(identifier);
 //    this.record = record;
 //  }
+
+  public DoremusResource(URI uri) {
+    this();
+    this.uri = uri;
+    this.resource = model.createResource(this.uri.toString());
+  }
+
 
   public Resource asResource() {
     return this.resource;

@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.doremus.euterpeConverter.musResource.E52_TimeSpan;
 import org.doremus.euterpeConverter.ontology.CIDOC;
 
 import java.net.URI;
@@ -104,30 +105,30 @@ public class Person {
     addProperty(RDFS.label, this.getFullName(), lang);
     addProperty(CIDOC.P131_is_identified_by, this.getIdentification(), lang);
 
-    addDate(this.getBirthDate(), false);
-    addDate(this.getDeathDate(), true);
+//    addDate(this.getBirthDate(), false);
+//    addDate(this.getDeathDate(), true);
 
     return resource;
   }
 
-  public void addDate(String date, boolean isDeath) {
-    TimeSpan ts = cleanDate(date);
-    if (ts == null) return;
-
-    Property schemaProp = model.createProperty(Converter.SCHEMA + (isDeath ? "deathDate" : "birthDate"));
-
-    String url = this.uri + (isDeath ? "/death" : "/birth");
-    ts.setUri(url + "/interval");
-    addProperty(isDeath ? CIDOC.P100i_died_in : CIDOC.P98i_was_born,
-      model.createResource(url)
-        .addProperty(RDF.type, isDeath ? CIDOC.E69_Death : CIDOC.E67_Birth)
-        .addProperty(CIDOC.P4_has_time_span, ts.asResource())
-    );
-
-    this.resource.addProperty(schemaProp, ts.getStart());
-
-    model.add(ts.getModel());
-  }
+//  public void addDate(String date, boolean isDeath) {
+//    E52_TimeSpan ts = cleanDate(date);
+//    if (ts == null) return;
+//
+//    Property schemaProp = model.createProperty(Converter.SCHEMA + (isDeath ? "deathDate" : "birthDate"));
+//
+//    String url = this.uri + (isDeath ? "/death" : "/birth");
+//    ts.setUri(url + "/interval");
+//    addProperty(isDeath ? CIDOC.P100i_died_in : CIDOC.P98i_was_born,
+//      model.createResource(url)
+//        .addProperty(RDF.type, isDeath ? CIDOC.E69_Death : CIDOC.E67_Birth)
+//        .addProperty(CIDOC.P4_has_time_span, ts.asResource())
+//    );
+//
+//    this.resource.addProperty(schemaProp, ts.getStart());
+//
+//    model.add(ts.getModel());
+//  }
 
   public void addProperty(Property property, Resource object) {
     if (property == null || object == null) return;
@@ -147,34 +148,34 @@ public class Person {
     addProperty(property, object, null);
   }
 
-  private TimeSpan cleanDate(String d) {
-    if (d == null || d.isEmpty() || d.startsWith(".") || d.equals("compositeur")) return null;
-    TimeSpan ts;
-
-    d = d.replaceFirst("(.{4}\\??) BC", "-$1");
-
-    boolean uncertain = false;
-    String uncertainRegex = "(.{4}) ?\\?";
-    if (d.matches(uncertainRegex)) {
-      uncertain = true;
-      d = d.replaceFirst(uncertainRegex, "$1");
-    }
-    if (d.startsWith("ca")) {
-      uncertain = true;
-      d.replaceFirst("^ca", "").trim();
-    }
-    // "850?" is 850-uncertain, not 8500-precision at decade
-    if (!d.startsWith("1") && d.length() > 3 && d.charAt(3) == '?'){
-      uncertain = true;
-      d = d.substring(0, 3);
-    }
-    if (d.replaceFirst("^-", "").length() > 4)
-      // I have the info on the end date!
-      ts = new TimeSpan(d.substring(0, 4), d.substring(4));
-    else ts = new TimeSpan(d);
-
-    if (uncertain) ts.setQuality(TimeSpan.Precision.UNCERTAINTY);
-
-    return ts;
-  }
+//  private E52_TimeSpan cleanDate(String d) {
+//    if (d == null || d.isEmpty() || d.startsWith(".") || d.equals("compositeur")) return null;
+//    E52_TimeSpan ts;
+//
+//    d = d.replaceFirst("(.{4}\\??) BC", "-$1");
+//
+//    boolean uncertain = false;
+//    String uncertainRegex = "(.{4}) ?\\?";
+//    if (d.matches(uncertainRegex)) {
+//      uncertain = true;
+//      d = d.replaceFirst(uncertainRegex, "$1");
+//    }
+//    if (d.startsWith("ca")) {
+//      uncertain = true;
+//      d.replaceFirst("^ca", "").trim();
+//    }
+//    // "850?" is 850-uncertain, not 8500-precision at decade
+//    if (!d.startsWith("1") && d.length() > 3 && d.charAt(3) == '?'){
+//      uncertain = true;
+//      d = d.substring(0, 3);
+//    }
+//    if (d.replaceFirst("^-", "").length() > 4)
+//      // I have the info on the end date!
+//      ts = new E52_TimeSpan(d.substring(0, 4), d.substring(4));
+//    else ts = new E52_TimeSpan(d);
+//
+//    if (uncertain) ts.setQuality(E52_TimeSpan.Precision.UNCERTAINTY);
+//
+//    return ts;
+//  }
 }

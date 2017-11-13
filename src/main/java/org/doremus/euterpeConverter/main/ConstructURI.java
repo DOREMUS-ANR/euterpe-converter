@@ -53,6 +53,7 @@ public class ConstructURI {
         return "publication";
       case "F31_Performance":
       case "M42_PerformedExpressionCreation":
+      case "M26_Foreseen_Performance":
         return "performance";
       case "E21_Person":
         return "artist";
