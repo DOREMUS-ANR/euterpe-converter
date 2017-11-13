@@ -1,0 +1,122 @@
+group 'org.doremus'
+
+import hu.webhejj.gradle.jena.UrlSchemaGen
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+configurations.all {
+    resolutionStrategy {
+        force 'xml-apis:xml-apis:1.4.01'
+    }
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21',
+            'org.slf4j:slf4j-simple:1.7.21',
+            'org.apache.jena:apache-jena-libs:3.1.0',
+            'org.apache.poi:poi:3.14',
+            'org.apache.poi:poi-ooxml:3.14',
+            'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5',
+            'com.openlinksw:virtjdbc4@jar',
+            'xml-apis:xml-apis:1.4.01',
+            'virtuoso.jena.driver:virt_jena3@jar',
+//            'edu.stanford.nlp:stanford-corenlp:3.6.0',
+//            'edu.stanford.nlp:stanford-corenlp:3.6.0:models',
+            'com.moparisthebest:junidecode:0.1.1',
+            'com.github.DOREMUS-ANR:string2vocabulary:0.1'
+}
+
+
+run {
+    standardOutput = System.out
+}
+// Plugin: 'application'
+// fill with the complete package path of the "main" class
+mainClassName = 'org.doremus.euterpeConverter.main.Converter'
+
+buildscript {
+    repositories {
+        jcenter()
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    // TODO gradle jena plugin is waiting for a pull request
+    // see https://github.com/gnagy/gradle-jena-plugin/pull/2
+    dependencies {
+        classpath 'org.apache.jena:jena-cmds:3.1.0',
+                'hu.webhejj.gradle:gradle-jena-plugin:1.1.0@jar'
+    }
+}
+
+task schemagen(dependsOn: ['schemagenFrbroo', 'schemagenCidoc', 'schemagenDoremus', 'schemagenProvO'])
+
+task schemagenProvO(type: UrlSchemaGen) {
+    input = uri('http://www.w3.org/ns/prov')
+    outputDirectory = file('src/main/java/')
+    packageName = 'org.doremus.ontology'
+    classNameSuffix = 'PROV'
+    ontology = true
+    inference = true
+    nostrict = true
+    nocomments = true
+    namespace = 'http://www.w3.org/ns/prov#'
+}
+task schemagenTime(type: UrlSchemaGen) {
+    input = uri('https://raw.githubusercontent.com/w3c/sdw/gh-pages/time/rdf/time.ttl')
+    outputDirectory = file('src/main/java/')
+    packageName = 'org.doremus.ontology'
+    classNameSuffix = 'Time'
+    ontology = true
+    inference = true
+    nostrict = true
+    nocomments = true
+    namespace = 'http://www.w3.org/2006/time#'
+}
+
+task schemagenDoremus(type: UrlSchemaGen) {
+    input = uri('https://raw.githubusercontent.com/DOREMUS-ANR/doremus-ontology/master/doremus.ttl')
+    outputDirectory = file('src/main/java/')
+    packageName = 'org.doremus.ontology'
+    classNameSuffix = 'MUS'
+    ontology = true
+    inference = true
+    nostrict = true
+    nocomments = true
+    namespace = 'http://data.doremus.org/ontology#'
+}
+
+task schemagenFrbroo(type: UrlSchemaGen) {
+    input = uri('http://erlangen-crm.org/efrbroo/')
+    outputDirectory = file('src/main/java/')
+    packageName = 'org.doremus.ontology'
+    classNameSuffix = 'FRBROO'
+    ontology = true
+    inference = false
+    nostrict = true
+    nocomments = true
+    namespace = 'http://erlangen-crm.org/efrbroo/'
+}
+
+task schemagenCidoc(type: UrlSchemaGen) {
+    input = uri('http://erlangen-crm.org/current/')
+    outputDirectory = file('src/main/java/')
+    packageName = 'org.doremus.ontology'
+    classNameSuffix = 'CIDOC'
+    ontology = true
+    inference = false
+    nostrict = true
+    nocomments = true
+    namespace = 'http://erlangen-crm.org/current/'
+}
