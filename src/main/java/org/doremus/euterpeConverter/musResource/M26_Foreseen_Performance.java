@@ -39,11 +39,16 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
     E53_Place p1 = new E53_Place(ev.etablissement, "etablissement");
     E53_Place p2 = new E53_Place(ev.lieu, "lieu");
-    p2.asResource().addProperty(CIDOC.P89_falls_within, p1.asResource());
+
     this.model.add(p1.model);
-    this.model.add(p2.model);
-    this.resource.addProperty(CIDOC.P7_took_place_at, p1.asResource())
-      .addProperty(CIDOC.P7_took_place_at, p2.asResource());
+    this.resource.addProperty(CIDOC.P7_took_place_at, p1.asResource());
+
+    if(p2.asResource() != null) {
+      p2.asResource().addProperty(CIDOC.P89_falls_within, p1.asResource());
+      this.model.add(p2.model);
+      this.resource.addProperty(CIDOC.P7_took_place_at, p2.asResource());
+    }
+
 
     if (!ev.titre_ligne2.isEmpty())
       this.resource.addProperty(MUS.U67_has_subtitle, ev.titre_ligne2);

@@ -45,16 +45,9 @@ public class GeoNames {
   }
 
   public static Toponym query(String label, String type) {
-    String featureCode = null;
-    switch (type) {
-      case "etablissement":
-        featureCode = "BLDG";
-        break;
-      case "lieu":
-      default:
-        // do nothing
-    }
+    if (label == null) return null;
 
+    String featureCode = null;
     Toponym tp = null;
 
     if (cache.containsKey(label)) {
@@ -64,6 +57,23 @@ public class GeoNames {
         tp.setGeoNameId(k);
       }
       return tp;
+    }
+
+    String fullLabel = label;
+    if (label.startsWith("Eglise ")) {
+      type = "eglise";
+      label = label.replace("Eglise ", "").trim();
+    }
+    switch (type) {
+      case "eglise":
+        featureCode = "CH";
+        break;
+      case "etablissement":
+        featureCode = "BLDG";
+        break;
+      case "lieu":
+      default:
+        // do nothing
     }
 
     ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
@@ -76,7 +86,7 @@ public class GeoNames {
       if (searchResult.getToponyms().size() > 0)
         tp = searchResult.getToponyms().get(0);
 
-      addToCache(label, tp != null ? tp.getGeoNameId() : -1);
+      addToCache(fullLabel, tp != null ? tp.getGeoNameId() : -1);
     } catch (Exception e) {
       e.printStackTrace();
     }
