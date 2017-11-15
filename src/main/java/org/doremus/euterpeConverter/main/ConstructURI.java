@@ -36,7 +36,7 @@ public class ConstructURI {
   private static String getCollectionName(String className) {
     switch (className) {
       case "F22_SelfContainedExpression":
-      case "F25_PerformancePlan":
+      case "F25_Performance_Plan":
       case "M43_PerformedExpression":
         return "expression";
       case "F28_ExpressionCreation":
@@ -59,6 +59,8 @@ public class ConstructURI {
         return "artist";
       case "E4_Period":
         return "period";
+      case "E53_Place":
+        return "place";
       case "prov":
         return "activity";
       default:

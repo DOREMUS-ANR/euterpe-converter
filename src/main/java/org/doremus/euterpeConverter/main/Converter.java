@@ -8,6 +8,7 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
+import org.doremus.euterpeConverter.musResource.F25_Performance_Plan;
 import org.doremus.euterpeConverter.musResource.M26_Foreseen_Performance;
 import org.doremus.euterpeConverter.ontology.*;
 import org.doremus.euterpeConverter.sources.EuterpeFile;
@@ -31,6 +32,9 @@ public class Converter {
 
   public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException, NoSuchAlgorithmException {
     loadProperties();
+    GeoNames.loadCache();
+    GeoNames.setUser(properties.getProperty("geonames_user"));
+
     System.out.println("Running with the following properties: " + properties);
 
     ClassLoader classLoader = Converter.class.getClassLoader();
@@ -111,9 +115,10 @@ public class Converter {
     for (Evenement ev : ef.getEvenments()) {
 
       if (!ev.isAConcert()) continue;
+      System.out.println(ev.id);
+
       M26_Foreseen_Performance concert = M26_Foreseen_Performance.from(ev);
 
-      System.out.println(ev.id);
       try {
         write(concert.getModel(), ev.id);
       } catch (IOException e) {
