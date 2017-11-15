@@ -7,6 +7,7 @@ import org.doremus.euterpeConverter.ontology.CIDOC;
 import java.net.URISyntaxException;
 
 public class E53_Place extends DoremusResource {
+  private static final String GEO_NAME = "http://www.geonames.org/ontology#name";
 
   public E53_Place(String label, String type) throws URISyntaxException {
     super();
@@ -19,8 +20,10 @@ public class E53_Place extends DoremusResource {
     else {
       this.identifier = label;
       regenerateResource();
-      this.resource.addProperty(RDFS.label, label)
-        .addProperty(CIDOC.P1_is_identified_by, label);
     }
+
+    this.resource.addProperty(RDFS.label, label)
+      .addProperty(model.createProperty(GEO_NAME), label)
+      .addProperty(CIDOC.P1_is_identified_by, label);
   }
 }

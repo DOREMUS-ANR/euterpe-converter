@@ -2,6 +2,7 @@ package org.doremus.euterpeConverter.musResource;
 
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.ontology.CIDOC;
 import org.doremus.euterpeConverter.ontology.FRBROO;
@@ -18,6 +19,7 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
   public M26_Foreseen_Performance(String identifier) throws URISyntaxException {
     super(identifier);
+    this.resource.addProperty(RDF.type, MUS.M26_Foreseen_Performance);
   }
 
   public static M26_Foreseen_Performance from(Evenement ev) throws URISyntaxException {
@@ -41,12 +43,12 @@ public class M26_Foreseen_Performance extends DoremusResource {
     E53_Place p2 = new E53_Place(ev.lieu, "lieu");
 
     this.model.add(p1.model);
-    this.resource.addProperty(CIDOC.P7_took_place_at, p1.asResource());
+    this.resource.addProperty(MUS.U7_foresees_place_at, p1.asResource());
 
-    if(p2.asResource() != null) {
+    if (p2.asResource() != null) {
       p2.asResource().addProperty(CIDOC.P89_falls_within, p1.asResource());
       this.model.add(p2.model);
-      this.resource.addProperty(CIDOC.P7_took_place_at, p2.asResource());
+      this.resource.addProperty(MUS.U7_foresees_place_at, p2.asResource());
     }
 
 
@@ -61,27 +63,16 @@ public class M26_Foreseen_Performance extends DoremusResource {
       this.addDate(ev.date.get(i), i);
 
 
-    F25_Performance_Plan performancePlan = new F25_Performance_Plan(ev.id);
+    F25_Performance_Plan performancePlan = F25_Performance_Plan.from(ev);
     resource.addProperty(MUS.U77_foresees_performing_plan, performancePlan.asResource());
     this.model.add(performancePlan.model);
 
-    for (Oeuvre o : ev.oeuvre) {
-      F22_SelfContainedExpression exp = new F22_SelfContainedExpression(o);
-      F28_ExpressionCreation expCre = new F28_ExpressionCreation(o, false);
-      F14_IndividualWork work = new F14_IndividualWork(o);
-
-      expCre.asResource()
-        .addProperty(FRBROO.R17_created, exp.asResource())
-        .addProperty(FRBROO.R19_created_a_realisation_of, work.asResource());
-
-      this.model.add(exp.model).add(expCre.model).add(work.model);
-    }
   }
 
 
   private void addDate(Date d, int i) throws URISyntaxException {
     this.timeSpan = new E52_TimeSpan(new URI(this.uri + "/interval/" + i), d, null);
-    this.resource.addProperty(CIDOC.P4_has_time_span, this.timeSpan.asResource());
+    this.resource.addProperty(MUS.U8_foresees_time_span, this.timeSpan.asResource());
     this.model.add(this.timeSpan.getModel());
   }
 }
