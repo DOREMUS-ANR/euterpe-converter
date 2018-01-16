@@ -36,9 +36,22 @@ public class Evenement {
   @XmlElement
   public List<Oeuvre> oeuvre;
 
+  @XmlElementWrapper(name = "programme")
+  @XmlElement
+  public List<String> ligne;
+
   @XmlElementWrapper(name = "activites")
   @XmlElement
   public List<String> activite;
+
+  @XmlElementWrapper(name = "distribution")
+  @XmlElement
+  public List<Formation> formation;
+
+  @XmlElementWrapper(name = "distribution")
+  @XmlElement
+  public List<Intervenant> intervenant;
+
 
   public boolean isAConcert() {
     return activite.indexOf("concert") > -1 || activite.indexOf("concert éducatif") > -1;

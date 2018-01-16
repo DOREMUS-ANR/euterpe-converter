@@ -54,16 +54,6 @@ public abstract class DoremusResource {
     this.resource = model.createResource(this.uri.toString());
   }
 
-//  public DoremusResource(Record record) throws URISyntaxException {
-//    this(record.getIdentifier());
-//    this.record = record;
-//  }
-//
-//  public DoremusResource(Record record, String identifier) throws URISyntaxException {
-//    this(identifier);
-//    this.record = record;
-//  }
-
   public DoremusResource(URI uri) {
     this();
     this.uri = uri;

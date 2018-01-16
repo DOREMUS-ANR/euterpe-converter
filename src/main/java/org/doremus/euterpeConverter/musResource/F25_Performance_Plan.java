@@ -21,19 +21,29 @@ public class F25_Performance_Plan extends DoremusResource {
     return p;
   }
 
-  public void parse(Evenement ev) throws URISyntaxException {
-    for (Oeuvre o : ev.oeuvre) {
-      F22_SelfContainedExpression exp = new F22_SelfContainedExpression(o);
-      F28_ExpressionCreation expCre = new F28_ExpressionCreation(o, false);
-      F14_IndividualWork work = new F14_IndividualWork(o);
+  private void parse(Evenement ev) throws URISyntaxException {
+    F28_ExpressionCreation creation = new F28_ExpressionCreation(ev);
+    F20_PerformanceWork perfWork = new F20_PerformanceWork(ev);
 
-      expCre.asResource()
-        .addProperty(FRBROO.R17_created, exp.asResource())
-        .addProperty(FRBROO.R19_created_a_realisation_of, work.asResource());
+    creation.asResource().addProperty(FRBROO.R17_created, this.asResource())
+      .addProperty(FRBROO.R19_created_a_realisation_of, perfWork.asResource());
+    perfWork.asResource().addProperty(FRBROO.R12_is_realised_in, this.asResource());
+    this.model.add(creation.model).add(perfWork.model);
 
-      this.resource.addProperty(CIDOC.P165_incorporates, exp.asResource());
-      this.model.add(exp.model).add(expCre.model).add(work.model);
-    }
-
+    for (Oeuvre o : ev.oeuvre) parseWork(o);
   }
+
+  private void parseWork(Oeuvre o) throws URISyntaxException {
+    F22_SelfContainedExpression exp = new F22_SelfContainedExpression(o);
+    F28_ExpressionCreation expCre = new F28_ExpressionCreation(o);
+    F14_IndividualWork work = new F14_IndividualWork(o);
+
+    expCre.asResource()
+      .addProperty(FRBROO.R17_created, exp.asResource())
+      .addProperty(FRBROO.R19_created_a_realisation_of, work.asResource());
+
+    this.resource.addProperty(CIDOC.P165_incorporates, exp.asResource());
+    this.model.add(exp.model).add(expCre.model).add(work.model);
+  }
+
 }

@@ -23,7 +23,7 @@ import java.util.Properties;
 
 public class Converter {
   public final static String SCHEMA = "http://schema.org/";
-  public static Resource Philharmonie;
+  public static Resource Philharmonie, DOREMUS;
 
   public static Properties properties;
   private static int maxFilesInFolder, filesInCurrentFolder, currentFolder;
@@ -63,7 +63,7 @@ public class Converter {
 
     Model m = ModelFactory.createDefaultModel();
     Philharmonie = m.createResource("http://data.doremus.org/organization/Philharmonie_de_Paris");
-
+    DOREMUS = m.createResource("http://data.doremus.org/organization/DOREMUS");
 
     for (File file : list) {
       if (file.isDirectory()) {

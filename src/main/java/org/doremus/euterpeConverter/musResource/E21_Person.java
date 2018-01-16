@@ -9,6 +9,7 @@ import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.ontology.CIDOC;
 import org.doremus.euterpeConverter.sources.Compositeur;
+import org.doremus.euterpeConverter.sources.Intervenant;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,40 +22,55 @@ import java.util.Properties;
 
 public class E21_Person extends DoremusResource {
   private static final String ENDPOINT = "http://data.doremus.org/sparql";
+  private String id, label;
   ParameterizedSparqlString artistQuery = null;
 
   private static HashMap<String, String> cache = null;
-  private Compositeur record;
 
   public E21_Person(Compositeur record) throws URISyntaxException {
-    this.record = record;
+    this.id = record.id;
+    this.label = record.label;
+
+    createPerson();
+  }
+
+  public E21_Person(Intervenant record) throws URISyntaxException {
+    this.id = record.id;
+    this.label = record.label;
+
+    createPerson();
+  }
+
+  private void createPerson() throws URISyntaxException {
     if (cache == null) loadCache();
 
-    String url = cache.getOrDefault(record.id, null);
+    String url = cache.getOrDefault(this.id, null);
     if (url == null) {
       // never searched, search it
-      this.resource = searchInDb(record.label);
+      this.resource = searchInDb(this.label);
       if (this.resource != null) {
         url = this.resource.getURI();
-        addToCache(record.id, url);
+        addToCache(this.id, url);
       } else {
-        addToCache(record.id, "none");
+        addToCache(this.id, "none");
       }
     } else if (url.equals("none")) {
       // searched without success
       // traditional way
       url = null;
     } else {
-      url = cache.get(record.id);
+      url = cache.get(this.id);
     }
 
     this.uri = (url == null) ?
-      ConstructURI.build("ppe", "E21_Person", record.id) :
+      ConstructURI.build("ppe", "E21_Person", this.id) :
       new URI(url);
 
     if (this.resource == null)
       initResource();
+
   }
+
 
   public Resource searchInDb(String label) {
     if (artistQuery == null) {
@@ -80,8 +96,8 @@ public class E21_Person extends DoremusResource {
     this.resource = model.createResource(this.uri.toString());
     resource.addProperty(RDF.type, CIDOC.E21_Person);
 
-    addProperty(FOAF.name, this.record.label);
-    addProperty(RDFS.label, this.record.label);
+    addProperty(FOAF.name, this.label);
+    addProperty(RDFS.label, this.label);
 
     return resource;
   }
