@@ -95,7 +95,7 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
     // Notes
     this.addNote(ev.description);
-    for (String programLine : ev.ligne) addNote(programLine);
+    for (String programLine : ev.getProgramLines()) addNote(programLine);
 
     // dates
     for (int i = 0; i < ev.date.size(); i++)
@@ -103,12 +103,14 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
     // Musicians
     int activityCount = 0;
-    for (Formation f : ev.formation) {
+    for (Formation f : ev.getFormations()) {
       M27_Foreseen_Individual_Performance m27
         = new M27_Foreseen_Individual_Performance(this.uri, ++activityCount, f);
+      resource.addProperty(CIDOC.P69_has_association_with, m27.asResource());
+      this.model.add(m27.getModel());
     }
     M27_Foreseen_Individual_Performance oldM27 = null;
-    for (Intervenant i : ev.intervenant) {
+    for (Intervenant i : ev.getIntervenants()) {
       for (String role : i.role.split(",")) {
         role = role.trim();
 

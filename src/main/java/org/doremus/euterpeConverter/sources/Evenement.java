@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Evenement {
   public List<Oeuvre> oeuvre;
 
   @XmlElementWrapper(name = "programme")
-  @XmlElement
+  @XmlElement()
   public List<String> ligne;
 
   @XmlElementWrapper(name = "activites")
@@ -55,5 +56,24 @@ public class Evenement {
 
   public boolean isAConcert() {
     return activite.indexOf("concert") > -1 || activite.indexOf("concert éducatif") > -1;
+  }
+
+  public List<String> getProgramLines() {
+    return safeList(ligne);
+  }
+
+  public List<Intervenant> getIntervenants() {
+    return safeList(intervenant);
+  }
+
+  public List<Formation> getFormations() {
+    return safeList(formation);
+  }
+
+
+  private List safeList(List input){
+    if(input != null) return input;
+    return new ArrayList<>();
+
   }
 }

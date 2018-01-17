@@ -17,7 +17,7 @@ public class M27_Foreseen_Individual_Performance extends DoremusResource {
   public M27_Foreseen_Individual_Performance(URI uri, int incrementer, Formation formation) throws URISyntaxException {
     super();
     this.uri = URI.create(uri + "/" + incrementer);
-    this.regenerateResource();
+    this.resource = model.createResource(this.uri.toString());
     this.resource.addProperty(RDF.type, MUS.M27_Foreseen_Individual_Performance);
 
     F11_Corporate_Body body = new F11_Corporate_Body(formation);
