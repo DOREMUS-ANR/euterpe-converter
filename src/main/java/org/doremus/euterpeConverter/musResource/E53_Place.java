@@ -1,5 +1,6 @@
 package org.doremus.euterpeConverter.musResource;
 
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.GeoNames;
 import org.doremus.euterpeConverter.ontology.CIDOC;
@@ -22,7 +23,8 @@ public class E53_Place extends DoremusResource {
       regenerateResource();
     }
 
-    this.resource.addProperty(RDFS.label, label)
+    this.resource.addProperty(RDF.type, CIDOC.E53_Place)
+      .addProperty(RDFS.label, label)
       .addProperty(model.createProperty(GEO_NAME), label)
       .addProperty(CIDOC.P1_is_identified_by, label);
   }
