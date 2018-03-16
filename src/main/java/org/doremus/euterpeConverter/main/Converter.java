@@ -1,5 +1,6 @@
 package org.doremus.euterpeConverter.main;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -8,7 +9,6 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
-import org.doremus.euterpeConverter.musResource.F25_Performance_Plan;
 import org.doremus.euterpeConverter.musResource.M26_Foreseen_Performance;
 import org.doremus.euterpeConverter.ontology.*;
 import org.doremus.euterpeConverter.sources.EuterpeFile;
@@ -19,6 +19,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.Properties;
 
 public class Converter {
@@ -28,6 +29,7 @@ public class Converter {
   public static Properties properties;
   private static int maxFilesInFolder, filesInCurrentFolder, currentFolder;
   private static String inputFolderPath, outputFolderPath;
+  private static boolean modifiedOut = false;
 
 
   public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException, NoSuchAlgorithmException {
@@ -76,7 +78,7 @@ public class Converter {
 
   }
 
-  private static void write(Model m, String id) throws IOException {
+  private static void writeTtl(Model m, String id) throws IOException {
     if (m == null) return;
 
     m.setNsPrefix("mus", MUS.getURI());
@@ -105,29 +107,38 @@ public class Converter {
     fileName.getParentFile().mkdirs();
     FileWriter out = new FileWriter(fileName);
 
-    // m.write(System.out, "TURTLE");
+    // m.writeTtl(System.out, "TURTLE");
     m.write(out, "TURTLE");
     out.close();
   }
 
-  private static Model convertFile(File file) throws URISyntaxException {
+  private static Model convertFile(File file) {
     EuterpeFile ef = EuterpeFile.fromFile(file);
     for (Evenement ev : ef.getEvenments()) {
 
       if (!ev.isAConcert()) continue;
       System.out.println(ev.id);
 
-      M26_Foreseen_Performance concert = M26_Foreseen_Performance.from(ev);
-
       try {
-        write(concert.getModel(), ev.id);
-      } catch (IOException e) {
+        M26_Foreseen_Performance concert = M26_Foreseen_Performance.from(ev);
+        if(!modifiedOut) modifiedOut= addModified(concert.getModel());
+        writeTtl(concert.getModel(), ev.id);
+
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
 
     return null;
   }
+
+  private static boolean addModified(Model model) {
+    model.createResource("http://data.doremus.org/euterpe")
+      .addProperty(DCTerms.modified, Instant.now().toString(), XSDDatatype.XSDdateTime);
+    return true;
+  }
+
+
 
   private static void loadProperties() {
     properties = new Properties();

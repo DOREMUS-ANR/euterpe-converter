@@ -1,5 +1,6 @@
 package org.doremus.euterpeConverter.main;
 
+import net.sf.junidecode.Junidecode;
 import org.apache.http.client.utils.URIBuilder;
 
 import javax.xml.bind.DatatypeConverter;
@@ -17,8 +18,13 @@ public class ConstructURI {
   }
 
   public static URI build(String className, String firstName, String lastName, String birthDate) throws URISyntaxException {
-    String seed = firstName + lastName + birthDate;
+    String seed = norm(firstName + lastName + birthDate);
     return builder.setPath("/" + getCollectionName(className) + "/" + generateUUID(seed)).build();
+  }
+
+  private static String norm(String input) {
+    // remove punctuation, ascii transliteration
+    return Junidecode.unidecode(input.replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_`~()]", " "));
   }
 
   private static String generateUUID(String seed) {
@@ -32,6 +38,7 @@ public class ConstructURI {
       return "";
     }
   }
+
 
   private static String getCollectionName(String className) {
     switch (className) {
