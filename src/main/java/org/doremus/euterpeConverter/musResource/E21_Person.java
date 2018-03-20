@@ -7,7 +7,7 @@ import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
-import org.doremus.euterpeConverter.ontology.CIDOC;
+import org.doremus.ontology.CIDOC;
 import org.doremus.euterpeConverter.sources.Compositeur;
 import org.doremus.euterpeConverter.sources.Intervenant;
 

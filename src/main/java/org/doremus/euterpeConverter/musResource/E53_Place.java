@@ -3,7 +3,7 @@ package org.doremus.euterpeConverter.musResource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.GeoNames;
-import org.doremus.euterpeConverter.ontology.CIDOC;
+import org.doremus.ontology.CIDOC;
 
 import java.net.URISyntaxException;
 

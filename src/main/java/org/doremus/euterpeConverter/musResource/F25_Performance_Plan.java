@@ -2,8 +2,8 @@ package org.doremus.euterpeConverter.musResource;
 
 
 import org.apache.jena.vocabulary.RDF;
-import org.doremus.euterpeConverter.ontology.CIDOC;
-import org.doremus.euterpeConverter.ontology.FRBROO;
+import org.doremus.ontology.CIDOC;
+import org.doremus.ontology.FRBROO;
 import org.doremus.euterpeConverter.sources.Evenement;
 import org.doremus.euterpeConverter.sources.Oeuvre;
 

@@ -8,18 +8,15 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.main.Converter;
-import org.doremus.euterpeConverter.ontology.CIDOC;
-import org.doremus.euterpeConverter.ontology.FRBROO;
-import org.doremus.euterpeConverter.ontology.MUS;
-import org.doremus.euterpeConverter.ontology.PROV;
+import org.doremus.ontology.CIDOC;
+import org.doremus.ontology.MUS;
+import org.doremus.ontology.PROV;
 import org.doremus.euterpeConverter.sources.Evenement;
 import org.doremus.euterpeConverter.sources.Formation;
 import org.doremus.euterpeConverter.sources.Intervenant;
-import org.doremus.euterpeConverter.sources.Oeuvre;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.Format;
 import java.time.Instant;
 import java.util.Date;
 
@@ -116,7 +113,7 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
         boolean fromMuseum = role.contains("Musée de la musique");
         if (fromMuseum && oldM27 != null) {
-          this.resource.addProperty(MUS.U3_foresees_specific_medium_of_performance,
+          this.resource.addProperty(MUS.U3_foresees_use_of_specific_object,
             model.createResource().addProperty(RDF.type, CIDOC.E22_Man_Made_Object)
               .addProperty(RDFS.label, role.replaceAll("^\\((.+)\\)$", "$1"))
           );

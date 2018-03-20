@@ -1,5 +1,5 @@
 /* CVS $Id: $ */
-package org.doremus.euterpeConverter.ontology;
+package org.doremus.ontology;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.ontology.*;
 

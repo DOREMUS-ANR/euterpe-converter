@@ -7,8 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.doremus.euterpeConverter.musResource.E52_TimeSpan;
-import org.doremus.euterpeConverter.ontology.CIDOC;
+import org.doremus.ontology.CIDOC;
 
 import java.net.URI;
 import java.net.URISyntaxException;

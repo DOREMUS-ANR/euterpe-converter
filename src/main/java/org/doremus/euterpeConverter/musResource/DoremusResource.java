@@ -7,11 +7,10 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.main.Converter;
-import org.doremus.euterpeConverter.ontology.CIDOC;
+import org.doremus.ontology.CIDOC;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 
 
 public abstract class DoremusResource {

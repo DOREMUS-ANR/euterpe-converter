@@ -3,7 +3,7 @@ package org.doremus.euterpeConverter.musResource;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.doremus.euterpeConverter.ontology.MUS;
+import org.doremus.ontology.MUS;
 import org.doremus.euterpeConverter.sources.Formation;
 import org.doremus.euterpeConverter.sources.Intervenant;
 import org.doremus.string2vocabulary.VocabularyManager;
@@ -39,24 +39,24 @@ public class M27_Foreseen_Individual_Performance extends DoremusResource {
     this.resource.addProperty(RDFS.comment, role,"fr");
 
     if ("soliste".equals(role)) {
-      this.resource.addProperty(MUS.U36_foresees_responsibility_of_type, "soliste", "fr");
+      this.resource.addProperty(MUS.U36_foresees_responsibility, "soliste", "fr");
       return;
     }
 
     if ("direction".equals(role)) {
-      this.resource.addProperty(MUS.U35_foresees_function_of_type, "chef d'orchestre", "fr");
+      this.resource.addProperty(MUS.U35_foresees_function, "conductor", "en");
       return;
     }
 
     Resource match = VocabularyManager.searchInCategory(role, "fr", "mop");
     if (match != null) {
-      this.resource.addProperty(MUS.U2_foresees_use_of_medium_of_performance_of_type, match);
+      this.resource.addProperty(MUS.U2_foresees_use_of_medium_of_performance, match);
       return;
     }
 
     match = VocabularyManager.searchInCategory(role, "fr", "function");
     if (match != null) {
-      this.resource.addProperty(MUS.U35_foresees_function_of_type, match);
+      this.resource.addProperty(MUS.U35_foresees_function, match);
       return;
     }
 

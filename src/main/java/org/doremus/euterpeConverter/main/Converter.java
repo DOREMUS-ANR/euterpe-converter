@@ -10,9 +10,9 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
 import org.doremus.euterpeConverter.musResource.M26_Foreseen_Performance;
-import org.doremus.euterpeConverter.ontology.*;
 import org.doremus.euterpeConverter.sources.EuterpeFile;
 import org.doremus.euterpeConverter.sources.Evenement;
+import org.doremus.ontology.*;
 import org.doremus.string2vocabulary.VocabularyManager;
 
 import java.io.*;

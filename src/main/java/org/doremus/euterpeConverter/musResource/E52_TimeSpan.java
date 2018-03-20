@@ -4,14 +4,13 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.doremus.euterpeConverter.ontology.CIDOC;
-import org.doremus.euterpeConverter.ontology.Time;
+import org.doremus.ontology.CIDOC;
+import org.doremus.ontology.Time;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class E52_TimeSpan extends DoremusResource {
