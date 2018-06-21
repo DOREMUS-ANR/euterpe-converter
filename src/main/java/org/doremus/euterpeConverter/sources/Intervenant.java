@@ -10,8 +10,12 @@ public class Intervenant {
   public String id;
 
   @XmlAttribute(name = "libelle")
-  public String label;
+  private String label;
 
   @XmlAttribute(name = "role")
   public String role;
+
+  public String getLabel(){
+    return label.trim();
+  }
 }

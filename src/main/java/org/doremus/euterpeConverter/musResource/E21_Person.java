@@ -36,7 +36,9 @@ public class E21_Person extends DoremusResource {
 
   public E21_Person(Intervenant record) throws URISyntaxException {
     this.id = record.id;
-    this.label = record.label;
+    this.label = record.getLabel();
+    if (this.label.isEmpty())
+      throw new RuntimeException("Empty Person name");
 
     createPerson();
   }
