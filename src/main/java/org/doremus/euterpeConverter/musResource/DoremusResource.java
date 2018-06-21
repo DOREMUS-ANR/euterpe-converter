@@ -53,6 +53,16 @@ public abstract class DoremusResource {
     this.resource = model.createResource(this.uri.toString());
   }
 
+  protected void regenerateResource(URI uri) {
+    this.uri = uri;
+
+    // delete old one
+    if (this.resource != null) this.resource.removeProperties();
+
+    // generate the new one
+    this.resource = model.createResource(this.uri.toString());
+  }
+
   public DoremusResource(URI uri) {
     this();
     this.uri = uri;

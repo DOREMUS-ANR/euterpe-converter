@@ -17,14 +17,22 @@ public class ConstructURI {
     return builder.setPath("/" + getCollectionName(className) + "/" + generateUUID(seed)).build();
   }
 
+  public static URI build(String className, String name) throws URISyntaxException {
+    String _uuid = generateUUID(className + norm(name).toLowerCase());
+    return builder.setPath("/" + getCollectionName(className) + "/" + _uuid).build();
+  }
+
   public static URI build(String className, String firstName, String lastName, String birthDate) throws URISyntaxException {
     String seed = norm(firstName + lastName + birthDate);
     return builder.setPath("/" + getCollectionName(className) + "/" + generateUUID(seed)).build();
   }
 
   private static String norm(String input) {
-    // remove punctuation, ascii transliteration
-    return Junidecode.unidecode(input.replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_`~()]", " "));
+    // remove punctuation
+    String seed = input.replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_`~()]", " ");
+    // ascii transliteration
+    seed = Junidecode.unidecode(seed);
+    return seed;
   }
 
   private static String generateUUID(String seed) {
