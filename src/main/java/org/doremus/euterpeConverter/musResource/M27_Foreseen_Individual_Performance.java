@@ -3,18 +3,17 @@ package org.doremus.euterpeConverter.musResource;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.doremus.ontology.MUS;
 import org.doremus.euterpeConverter.sources.Formation;
 import org.doremus.euterpeConverter.sources.Intervenant;
+import org.doremus.ontology.MUS;
 import org.doremus.string2vocabulary.VocabularyManager;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class M27_Foreseen_Individual_Performance extends DoremusResource {
   public boolean isARole;
 
-  public M27_Foreseen_Individual_Performance(URI uri, int incrementer, Formation formation) throws URISyntaxException {
+  public M27_Foreseen_Individual_Performance(URI uri, int incrementer, Formation formation) {
     super();
     this.uri = URI.create(uri + "/" + incrementer);
     this.resource = model.createResource(this.uri.toString());
@@ -27,7 +26,7 @@ public class M27_Foreseen_Individual_Performance extends DoremusResource {
     // TODO add a role based on the label (i.e. if contains "orchestra") ?
   }
 
-  public M27_Foreseen_Individual_Performance(URI uri, int incrementer, Intervenant intervenant, String role) throws URISyntaxException {
+  public M27_Foreseen_Individual_Performance(URI uri, int incrementer, Intervenant intervenant, String role) {
     super();
     this.uri = URI.create(uri + "/" + incrementer);
     this.regenerateResource();

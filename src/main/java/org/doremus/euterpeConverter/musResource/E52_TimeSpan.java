@@ -24,8 +24,12 @@ public class E52_TimeSpan extends DoremusResource {
     return start;
   }
 
-  public void setUri(String uri) throws URISyntaxException {
-    this.uri = new URI(uri);
+  public void setUri(String uri) {
+    try {
+      this.uri = new URI(uri);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
   }
 
 
@@ -44,9 +48,7 @@ public class E52_TimeSpan extends DoremusResource {
     @Override
     public String toString() {
       return text;
-
     }
-
   }
 
   public E52_TimeSpan(URI uri, Date start) {

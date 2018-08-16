@@ -9,15 +9,18 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
+import org.doremus.euterpeConverter.musResource.M25_ForeseenActivity;
 import org.doremus.euterpeConverter.musResource.M26_Foreseen_Performance;
 import org.doremus.euterpeConverter.sources.EuterpeFile;
 import org.doremus.euterpeConverter.sources.Evenement;
+import org.doremus.euterpeConverter.sources.SeasonChain;
 import org.doremus.ontology.*;
 import org.doremus.string2vocabulary.VocabularyManager;
 
 import java.io.*;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Properties;
 
 public class Converter {
@@ -49,11 +52,11 @@ public class Converter {
     filesInCurrentFolder = 0;
     currentFolder = 0;
 
+    convertSeasons(new File(properties.getProperty("saisons")));
     convertFolder(new File(inputFolderPath));
   }
 
   private static void convertFolder(File folder) {
-
     File[] list = folder.isDirectory() ? folder.listFiles() : new File[]{folder};
 
     if (list == null || list.length < 1) {
@@ -112,6 +115,7 @@ public class Converter {
 
   private static Model convertFile(File file) {
     EuterpeFile ef = EuterpeFile.fromFile(file);
+    assert ef != null;
     for (Evenement ev : ef.getEvenments()) {
 
       if (!ev.isAConcert()) continue;
@@ -119,7 +123,7 @@ public class Converter {
 
       try {
         M26_Foreseen_Performance concert = M26_Foreseen_Performance.from(ev);
-        if(!modifiedOut) modifiedOut= addModified(concert.getModel());
+        if (!modifiedOut) modifiedOut = addModified(concert.getModel());
         writeTtl(concert.getModel(), ev.id);
 
       } catch (Exception e) {
@@ -130,12 +134,24 @@ public class Converter {
     return null;
   }
 
+  private static void convertSeasons(File input) {
+    Model model = ModelFactory.createDefaultModel();
+    for (SeasonChain sc : Objects.requireNonNull(SeasonChain.init(input))) {
+      M25_ForeseenActivity fm = new M25_ForeseenActivity(sc);
+      model.add(fm.getModel());
+    }
+    try {
+      writeTtl(model, "seasons");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   private static boolean addModified(Model model) {
     model.createResource("http://data.doremus.org/euterpe")
       .addProperty(DCTerms.modified, Instant.now().toString(), XSDDatatype.XSDdateTime);
     return true;
   }
-
 
 
   private static void loadProperties() {

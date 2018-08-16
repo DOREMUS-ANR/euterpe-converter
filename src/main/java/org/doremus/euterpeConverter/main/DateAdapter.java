@@ -13,13 +13,15 @@ public class DateAdapter extends XmlAdapter<String, Date> {
 
   @Override
   public Date unmarshal(String v) throws Exception {
-    //    <date>vendredi 14/10/2016, 20:30</date>
-    String[] parts = v.split(" ", 2);
-    return f.parse(parts[1] + "UTC");
+    if ((v.charAt(0) + "").matches("(?i)a-z")) {
+      //    <date>vendredi 14/10/2016, 20:30</date>
+      v = v.split(" ", 2)[1];
+    }
+    return f.parse(v + "UTC");
   }
 
   @Override
-  public String marshal(Date v) throws Exception {
+  public String marshal(Date v) {
     return f.format(v);
   }
 }

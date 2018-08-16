@@ -8,12 +8,12 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.main.Converter;
-import org.doremus.ontology.CIDOC;
-import org.doremus.ontology.MUS;
-import org.doremus.ontology.PROV;
 import org.doremus.euterpeConverter.sources.Evenement;
 import org.doremus.euterpeConverter.sources.Formation;
 import org.doremus.euterpeConverter.sources.Intervenant;
+import org.doremus.ontology.CIDOC;
+import org.doremus.ontology.MUS;
+import org.doremus.ontology.PROV;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,12 +24,12 @@ public class M26_Foreseen_Performance extends DoremusResource {
   private E52_TimeSpan timeSpan;
   private Resource provEntity, provActivity;
 
-  public M26_Foreseen_Performance(String identifier) throws URISyntaxException {
+  public M26_Foreseen_Performance(String identifier) {
     super(identifier);
     this.resource.addProperty(RDF.type, MUS.M26_Foreseen_Performance);
   }
 
-  public static M26_Foreseen_Performance from(Evenement ev) throws URISyntaxException {
+  public static M26_Foreseen_Performance from(Evenement ev) {
     M26_Foreseen_Performance fp = new M26_Foreseen_Performance(ev.id);
     fp.parse(ev);
     fp.addProvenance(ev.id);
@@ -37,12 +37,18 @@ public class M26_Foreseen_Performance extends DoremusResource {
     return fp;
   }
 
-  private void addProvenance(String id) throws URISyntaxException {
+  private void addProvenance(String id) {
     // PROV-O tracing
     provEntity = model.createResource("http://data.doremus.org/source/euterpe/" + id)
       .addProperty(RDF.type, PROV.Entity).addProperty(PROV.wasAttributedTo, Converter.Philharmonie);
 
-    provActivity = model.createResource(ConstructURI.build("ppe", "prov", id).toString())
+    String provUri = null;
+    try {
+      provUri = ConstructURI.build("ppe", "prov", id).toString();
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    provActivity = model.createResource(provUri)
       .addProperty(RDF.type, PROV.Activity).addProperty(RDF.type, PROV.Derivation)
       .addProperty(PROV.used, provEntity)
       .addProperty(RDFS.comment, "Reprise et conversion de la notice avec id " + id +
@@ -58,7 +64,7 @@ public class M26_Foreseen_Performance extends DoremusResource {
       .addProperty(PROV.wasGeneratedBy, this.provActivity);
   }
 
-  private void parse(Evenement ev) throws URISyntaxException {
+  private void parse(Evenement ev) {
 
     this.resource
       .addProperty(DCTerms.identifier, ev.id)
@@ -142,8 +148,14 @@ public class M26_Foreseen_Performance extends DoremusResource {
   }
 
 
-  private void addDate(Date d, int i) throws URISyntaxException {
-    this.timeSpan = new E52_TimeSpan(new URI(this.uri + "/interval/" + i), d, null);
+  private void addDate(Date d, int i) {
+    URI tsUri = null;
+    try {
+      tsUri = new URI(this.uri + "/interval/" + i);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    this.timeSpan = new E52_TimeSpan(tsUri, d, null);
     this.resource.addProperty(MUS.U8_foresees_time_span, this.timeSpan.asResource());
     this.model.add(this.timeSpan.getModel());
   }

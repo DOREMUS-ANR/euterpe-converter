@@ -1,18 +1,16 @@
 package org.doremus.euterpeConverter.musResource;
 
 import org.apache.jena.vocabulary.RDF;
-import org.doremus.ontology.CIDOC;
-import org.doremus.ontology.FRBROO;
-import org.doremus.ontology.MUS;
 import org.doremus.euterpeConverter.sources.Compositeur;
 import org.doremus.euterpeConverter.sources.Evenement;
 import org.doremus.euterpeConverter.sources.Oeuvre;
-
-import java.net.URISyntaxException;
+import org.doremus.ontology.CIDOC;
+import org.doremus.ontology.FRBROO;
+import org.doremus.ontology.MUS;
 
 public class F28_ExpressionCreation extends DoremusResource {
 
-  public F28_ExpressionCreation(Oeuvre oeuvre) throws URISyntaxException {
+  public F28_ExpressionCreation(Oeuvre oeuvre) {
     // Creation of a Work
     super(oeuvre.id);
     this.resource.addProperty(RDF.type, FRBROO.F28_Expression_Creation);
@@ -34,7 +32,7 @@ public class F28_ExpressionCreation extends DoremusResource {
     }
   }
 
-  public F28_ExpressionCreation(Evenement ev) throws URISyntaxException {
+  public F28_ExpressionCreation(Evenement ev) {
     // Creation of a Performance plan
     super(ev.id);
     this.resource.addProperty(RDF.type, FRBROO.F28_Expression_Creation);

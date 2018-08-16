@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 public class E53_Place extends DoremusResource {
   private static final String GEO_NAME = "http://www.geonames.org/ontology#name";
 
-  public E53_Place(String label, String type) throws URISyntaxException {
+  public E53_Place(String label, String type) {
     super();
 
     if (label == null) return;
@@ -21,7 +21,11 @@ public class E53_Place extends DoremusResource {
     if (match != null)
       this.resource = model.createResource(match);
     else {
-      uri = ConstructURI.build("E53_Place", label);
+      try {
+        uri = ConstructURI.build("E53_Place", label);
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      }
       regenerateResource(uri);
     }
 

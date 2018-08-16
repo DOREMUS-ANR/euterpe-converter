@@ -58,6 +58,7 @@ public class ConstructURI {
       case "F30_PublicationEvent":
       case "M45_DescriptiveExpressionAssignment":
       case "F42_RepresentativeExpressionAssignment":
+      case "M25_Foreseen_Activity":
         return "event";
       case "F14_IndividualWork":
       case "F15_ComplexWork":

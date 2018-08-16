@@ -1,10 +1,11 @@
 package org.doremus.euterpeConverter.musResource;
 
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.ontology.OntClass;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.main.Converter;
@@ -32,7 +33,7 @@ public abstract class DoremusResource {
     this.publisher = Converter.Philharmonie;
   }
 
-  public DoremusResource(String identifier) throws URISyntaxException {
+  public DoremusResource(String identifier) {
     this();
     this.identifier = identifier;
 
@@ -45,12 +46,16 @@ public abstract class DoremusResource {
     regenerateResource();
   }
 
-  protected void regenerateResource() throws URISyntaxException {
+  protected void regenerateResource() {
     // delete old one
     if (this.resource != null) this.resource.removeProperties();
 
     // generate the new one
-    this.uri = ConstructURI.build(this.sourceDb, this.className, this.identifier);
+    try {
+      this.uri = ConstructURI.build(this.sourceDb, this.className, this.identifier);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
     this.resource = model.createResource(this.uri.toString());
   }
 
@@ -82,6 +87,10 @@ public abstract class DoremusResource {
     }
   }
 
+  protected void setClass(OntClass _class) {
+    this.resource.addProperty(RDF.type, _class);
+  }
+
 
   public Resource asResource() {
     return this.resource;
@@ -104,5 +113,42 @@ public abstract class DoremusResource {
       .addProperty(RDFS.comment, text, "fr")
       .addProperty(CIDOC.P3_has_note, text, "fr");
   }
+
+  public DoremusResource addProperty(Property property, DoremusResource resource) {
+    if (resource != null) {
+      this.addProperty(property, resource.asResource());
+      this.model.add(resource.getModel());
+    }
+    return this;
+  }
+
+  public DoremusResource addProperty(Property property, Resource resource) {
+    if (resource != null) this.resource.addProperty(property, resource);
+    return this;
+  }
+
+  public DoremusResource addProperty(Property property, String literal) {
+    if (literal != null && !literal.isEmpty())
+      this.resource.addProperty(property, literal.trim());
+    return this;
+  }
+  public DoremusResource addProperty(Property property, String literal, String lang) {
+    if (literal != null && !literal.isEmpty())
+      this.resource.addProperty(property, literal.trim(), lang);
+    return this;
+  }
+
+  protected DoremusResource addProperty(Property property, Literal literal) {
+    if (literal != null)
+      this.resource.addProperty(property, literal);
+    return this;
+  }
+
+  protected DoremusResource addProperty(Property property, String literal, XSDDatatype datatype) {
+    if (literal != null && !literal.isEmpty())
+      this.resource.addProperty(property, literal.trim(), datatype);
+    return this;
+  }
+
 
 }

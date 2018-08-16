@@ -1,16 +1,13 @@
 package org.doremus.euterpeConverter.musResource;
 
-import org.apache.jena.vocabulary.RDF;
-import org.doremus.ontology.FRBROO;
 import org.doremus.euterpeConverter.sources.Evenement;
-
-import java.net.URISyntaxException;
+import org.doremus.ontology.FRBROO;
 
 public class F20_PerformanceWork extends DoremusResource {
 
-  public F20_PerformanceWork(Evenement ev) throws URISyntaxException {
+  public F20_PerformanceWork(Evenement ev) {
     super(ev.id);
-    this.resource.addProperty(RDF.type, FRBROO.F20_Performance_Work);
+    this.setClass(FRBROO.F20_Performance_Work);
   }
 
 }
