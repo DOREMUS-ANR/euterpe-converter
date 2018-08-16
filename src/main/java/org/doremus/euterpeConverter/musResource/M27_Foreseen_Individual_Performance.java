@@ -1,7 +1,6 @@
 package org.doremus.euterpeConverter.musResource;
 
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.sources.Formation;
 import org.doremus.euterpeConverter.sources.Intervenant;
@@ -17,7 +16,7 @@ public class M27_Foreseen_Individual_Performance extends DoremusResource {
     super();
     this.uri = URI.create(uri + "/" + incrementer);
     this.resource = model.createResource(this.uri.toString());
-    this.resource.addProperty(RDF.type, MUS.M27_Foreseen_Individual_Performance);
+    this.setClass(MUS.M27_Foreseen_Individual_Performance);
 
     F11_Corporate_Body body = new F11_Corporate_Body(formation);
     this.resource.addProperty(MUS.U6_foresees_actor, body.asResource());
@@ -29,13 +28,13 @@ public class M27_Foreseen_Individual_Performance extends DoremusResource {
   public M27_Foreseen_Individual_Performance(URI uri, int incrementer, Intervenant intervenant, String role) {
     super();
     this.uri = URI.create(uri + "/" + incrementer);
-    this.regenerateResource();
-    this.resource.addProperty(RDF.type, MUS.M27_Foreseen_Individual_Performance);
+    this.regenerateResource(this.uri);
+    this.setClass(MUS.M27_Foreseen_Individual_Performance);
     this.isARole = true;
 
     E21_Person person = new E21_Person(intervenant);
     this.resource.addProperty(MUS.U6_foresees_actor, person.asResource());
-    this.resource.addProperty(RDFS.comment, role,"fr");
+    this.resource.addProperty(RDFS.comment, role, "fr");
 
     if ("soliste".equals(role)) {
       this.resource.addProperty(MUS.U36_foresees_responsibility, "soliste", "fr");

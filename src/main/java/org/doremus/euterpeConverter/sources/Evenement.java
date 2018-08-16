@@ -2,10 +2,7 @@ package org.doremus.euterpeConverter.sources;
 
 import org.doremus.euterpeConverter.main.DateAdapter;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +36,7 @@ public class Evenement {
   public List<Oeuvre> oeuvre;
 
   @XmlElementWrapper(name = "programme")
-  @XmlElement()
+  @XmlElement
   public List<String> ligne;
 
   @XmlElementWrapper(name = "activites")
@@ -47,13 +44,11 @@ public class Evenement {
   public List<String> activite;
 
   @XmlElementWrapper(name = "distribution")
-  @XmlElement
-  public List<Formation> formation;
-
-  @XmlElementWrapper(name = "distribution")
-  @XmlElement
-  public List<Intervenant> intervenant;
-
+  @XmlElements({
+    @XmlElement(name = "intervenant", type = Intervenant.class),
+    @XmlElement(name = "formation", type = Formation.class)
+  })
+  public List<Performer> performers;
 
   public boolean isAConcert() {
     return activite.indexOf("concert") > -1 || activite.indexOf("concert éducatif") > -1;
@@ -64,13 +59,15 @@ public class Evenement {
   }
 
   public List<Intervenant> getIntervenants() {
-    return safeList(intervenant);
+    return (List<Intervenant>) safeList(performers).stream()
+      .filter(x -> x instanceof Intervenant)
+      .collect(Collectors.toList());
   }
 
   public List<Formation> getFormations() {
-    List<Formation> itx = safeList(formation);
-    return itx.stream()
-      .filter(x -> !x.getLabel().isEmpty())
+    return (List<Formation>) safeList(performers).stream()
+      .filter(x -> x instanceof Formation)
+      .filter(x -> !((Formation) x).getLabel().isEmpty())
       .collect(Collectors.toList());
   }
 

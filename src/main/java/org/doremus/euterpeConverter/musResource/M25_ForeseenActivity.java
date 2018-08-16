@@ -1,6 +1,5 @@
 package org.doremus.euterpeConverter.musResource;
 
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.sources.SeasonChain;
@@ -19,7 +18,7 @@ public class M25_ForeseenActivity extends DoremusResource {
 
 
     M26_Foreseen_Performance concert = new M26_Foreseen_Performance(sc.getId());
-    this.addProperty(CIDOC.P9_consists_of, concert);
+    this.addProperty(CIDOC.P9_consists_of, concert.asResource());
 
     //    M25 Foreseen Activity  P9 consists of M25 Foreseen Activity
     if (sc.hasCycle()) {
@@ -28,7 +27,7 @@ public class M25_ForeseenActivity extends DoremusResource {
 
       cycle.addProperty(CIDOC.P2_has_type, typeFromTitle(sc.getCycle()));
 
-      cycle.addProperty(CIDOC.P9_consists_of, concert);
+      cycle.addProperty(CIDOC.P9_consists_of, concert.asResource());
       this.addProperty(CIDOC.P9_consists_of, cycle);
     }
   }
@@ -52,8 +51,8 @@ public class M25_ForeseenActivity extends DoremusResource {
       e.printStackTrace();
     }
     this.setClass(MUS.M25_Foreseen_Activity);
-    this.addProperty(MUS.U92_foresees_to_put_into_effect, model.createResource()
-      .addProperty(RDF.type, MUS.M59_Program));
+//    this.addProperty(MUS.U92_foresees_to_put_into_effect, model.createResource()
+//      .addProperty(RDF.type, MUS.M59_Program));
 
   }
 

@@ -104,13 +104,17 @@ public class M26_Foreseen_Performance extends DoremusResource {
     // Musicians
     int activityCount = 0;
     for (Formation f : ev.getFormations()) {
+      System.out.println(f.getLabel());
+
       M27_Foreseen_Individual_Performance m27
         = new M27_Foreseen_Individual_Performance(this.uri, ++activityCount, f);
       resource.addProperty(CIDOC.P69_has_association_with, m27.asResource());
       this.model.add(m27.getModel());
     }
+
     M27_Foreseen_Individual_Performance oldM27 = null;
     for (Intervenant i : ev.getIntervenants()) {
+      System.out.println(i.getLabel());
       for (String role : i.role.split(",")) {
         role = role.trim();
 

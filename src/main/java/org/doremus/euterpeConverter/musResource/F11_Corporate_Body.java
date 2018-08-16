@@ -13,7 +13,7 @@ public class F11_Corporate_Body extends DoremusResource {
 
   public F11_Corporate_Body(Formation formation) {
     super(formation.id);
-    String name = formation.label.trim();
+    String name = formation.getLabel();
 
     Resource r = getFromDoremus(name);
     if (r != null) {
