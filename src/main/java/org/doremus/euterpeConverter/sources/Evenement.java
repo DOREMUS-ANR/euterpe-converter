@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Evenement {
@@ -67,12 +68,15 @@ public class Evenement {
   }
 
   public List<Formation> getFormations() {
-    return safeList(formation);
+    List<Formation> itx = safeList(formation);
+    return itx.stream()
+      .filter(x -> !x.getLabel().isEmpty())
+      .collect(Collectors.toList());
   }
 
 
-  private List safeList(List input){
-    if(input != null) return input;
+  private List safeList(List input) {
+    if (input != null) return input;
     return new ArrayList<>();
 
   }

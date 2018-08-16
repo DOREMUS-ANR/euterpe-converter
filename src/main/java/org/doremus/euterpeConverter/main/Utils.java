@@ -1,19 +1,17 @@
 package org.doremus.euterpeConverter.main;
 
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 
 public class Utils {
   private static Map<String, Locale> localeMap;
   private static Map<String, String> intermarcScriptMap;
-  private static Map<String, String> intermarcMopMap;
 
   public static final String opusHeaderRegex = "(?i)^(?:op(?:\\.|us| )|Oeuvre|Werk nr\\.?) ?(?:post(?:hume|h?\\.|h))?";
   public static final String opusSubnumberRegex = "(?i)(?:,? n(?:[o°.]| °)[s.]?)";
@@ -81,81 +79,21 @@ public class Utils {
     return l.toLanguageTag();
   }
 
-  public static String toLangDefaultScript(String lang) {
-    if (lang == null || lang.isEmpty()) return null;
+  public static QuerySolution queryDoremus(String sparql) {
+    Query query = QueryFactory.create();
+    QueryFactory.parse(query, sparql, "", Syntax.syntaxSPARQL_11);
+    QueryExecution qexec = QueryExecutionFactory.sparqlService("http://data.doremus.org/sparql", query);
+    ResultSet r = qexec.execSelect();
+    if (!r.hasNext()) return null;
+    return r.next();
 
-    return LocaleUtility.getScript(new Locale(lang));
   }
 
-  public static String intermarcToLangScript(String code) {
-    if (code == null || code.isEmpty() || code.equals(".")) return null;
-    if (intermarcScriptMap == null) { // init
-      try {
-        intermarcScriptMap = csvToMap("/intermarc2LangScript.csv", 0, 1);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-
-    String script = intermarcScriptMap.get(code);
-    return (script == null || script.isEmpty() || script.equals("Zzzz")) ? null : script;
+  public static RDFNode queryDoremus(String sparql, String var) {
+    QuerySolution result = queryDoremus(sparql);
+    if (result == null) return null;
+    else return result.get(var);
   }
 
-  public static String itermarc2mop(String intermarcInput) {
-    if (intermarcMopMap == null) {
-      try {
-        intermarcMopMap = csvToMap("/intermarc2iaml.csv", 3, 0);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    return intermarcMopMap.get(intermarcInput);
-  }
-
-
-  private static Map<String, String> csvToMap(String csvPath, int fieldKey, int fieldValue) throws IOException {
-    String csvFile = Utils.class.getClass().getResource(csvPath).getFile();
-    Map<String, String> map = new HashMap<>();
-
-
-    BufferedReader br = new BufferedReader(new FileReader(csvFile));
-
-    String line = br.readLine();
-    boolean firstLine = true;
-
-    while (line != null) {
-      if (firstLine) firstLine = false; // header
-      else {
-        String str[] = line.split(";");
-
-        String value = str[fieldValue];
-        String key = str[fieldKey];
-
-        if (!value.isEmpty()) map.put(key, value);
-      }
-      line = br.readLine();
-    }
-
-    return map;
-  }
-
-  public static String intermarcExtractLang(String data) {
-    if (data == null || data.length() < 6) return null;
-
-    String lang = data.substring(6)
-      .replaceAll("[.\\d]", "").trim();
-    lang = Utils.toISO2Lang(lang);
-
-    String script = Utils.intermarcToLangScript(data.substring(4, 5));
-    if (script == null) return lang;
-
-    if (lang != null && !script.equals(Utils.toLangDefaultScript(lang))) {
-      // it is a transliteration: add the script
-      lang += "-" + script;
-    } else if (lang == null && !script.equals("Latn"))
-      lang = "und-" + script;
-
-    return lang;
-  }
 }
 

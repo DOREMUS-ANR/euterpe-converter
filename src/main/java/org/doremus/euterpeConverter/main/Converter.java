@@ -16,9 +16,7 @@ import org.doremus.ontology.*;
 import org.doremus.string2vocabulary.VocabularyManager;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Properties;
 
@@ -32,7 +30,7 @@ public class Converter {
   private static boolean modifiedOut = false;
 
 
-  public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException, NoSuchAlgorithmException {
+  public static void main(String[] args) throws IOException {
     loadProperties();
     GeoNames.loadCache();
     GeoNames.setUser(properties.getProperty("geonames_user"));
@@ -54,7 +52,7 @@ public class Converter {
     convertFolder(new File(inputFolderPath));
   }
 
-  private static void convertFolder(File folder) throws URISyntaxException, IOException, NoSuchAlgorithmException {
+  private static void convertFolder(File folder) {
 
     File[] list = folder.isDirectory() ? folder.listFiles() : new File[]{folder};
 

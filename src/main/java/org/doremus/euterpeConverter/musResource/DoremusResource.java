@@ -4,6 +4,7 @@ package org.doremus.euterpeConverter.musResource;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.main.Converter;
@@ -67,6 +68,18 @@ public abstract class DoremusResource {
     this();
     this.uri = uri;
     this.resource = model.createResource(this.uri.toString());
+  }
+
+  protected void setUri(String uri) {
+    if (this.uri != null && uri.equals(this.uri.toString())) return;
+
+    try {
+      this.uri = new URI(uri);
+      if (this.resource != null)
+        this.resource = ResourceUtils.renameResource(this.resource, uri);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
   }
 
 
