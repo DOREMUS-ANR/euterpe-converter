@@ -5,10 +5,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.sparql.vocabulary.FOAF;
-import org.apache.jena.vocabulary.DCTerms;
-import org.apache.jena.vocabulary.OWL;
-import org.apache.jena.vocabulary.RDFS;
-import org.apache.jena.vocabulary.XSD;
+import org.apache.jena.vocabulary.*;
 import org.doremus.euterpeConverter.musResource.M25_ForeseenActivity;
 import org.doremus.euterpeConverter.musResource.M26_Foreseen_Performance;
 import org.doremus.euterpeConverter.sources.EuterpeFile;
@@ -90,6 +87,7 @@ public class Converter {
     m.setNsPrefix("ecrm", CIDOC.getURI());
     m.setNsPrefix("efrbroo", FRBROO.getURI());
     m.setNsPrefix("xsd", XSD.getURI());
+    m.setNsPrefix("dc", DC.getURI());
     m.setNsPrefix("dcterms", DCTerms.getURI());
     m.setNsPrefix("foaf", FOAF.getURI());
     m.setNsPrefix("rdfs", RDFS.getURI());
@@ -121,15 +119,14 @@ public class Converter {
     EuterpeFile ef = EuterpeFile.fromFile(file);
     assert ef != null;
     for (Evenement ev : ef.getEvenments()) {
-      // if(!(ev.id.equals("6570"))) continue;
+       if(!(ev.id.equals("15120"))) continue;
       if (!ev.isAConcert()) continue;
       System.out.println(ev.getId());
 
       try {
         M26_Foreseen_Performance concert = M26_Foreseen_Performance.from(ev);
         if (!modifiedOut) modifiedOut = addModified(concert.getModel());
-        writeTtl(concert.getModel(), ev.getId());
-
+        writeTtl(concert.getModel(), ev.id);
       } catch (Exception e) {
         e.printStackTrace();
       }

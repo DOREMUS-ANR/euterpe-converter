@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Evenement {
   @XmlElement
-  private String id;
+  public String id;
   @XmlElement
   public String etablissement;
   @XmlElement

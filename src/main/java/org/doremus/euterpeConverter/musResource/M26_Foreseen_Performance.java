@@ -32,7 +32,7 @@ public class M26_Foreseen_Performance extends DoremusResource {
   public static M26_Foreseen_Performance from(Evenement ev) {
     M26_Foreseen_Performance fp = new M26_Foreseen_Performance(ev.getId());
     fp.parse(ev);
-    fp.addProvenance(ev.getId());
+    fp.addProvenance(ev.id);
     fp.addProperty(DC.identifier, ev.getId());
     return fp;
   }
@@ -79,11 +79,10 @@ public class M26_Foreseen_Performance extends DoremusResource {
     E53_Place p1 = new E53_Place(ev.etablissement, "etablissement");
     E53_Place p2 = new E53_Place(ev.lieu, "lieu");
 
-
     if (p2.asResource() != null) {
-      this.addProperty(MUS.U7_foresees_place_at, p2);
       p2.setWithin(p1);
       this.addProperty(MUS.U7_foresees_place_at, p2.getOuter());
+      this.addProperty(MUS.U7_foresees_place_at, p2);
     } else this.addProperty(MUS.U7_foresees_place_at, p1);
 
     if (!ev.titre_ligne2.isEmpty())
@@ -102,8 +101,6 @@ public class M26_Foreseen_Performance extends DoremusResource {
     // Musicians
     int activityCount = 0;
     for (Formation f : ev.getFormations()) {
-      System.out.println(f.getLabel());
-
       M27_Foreseen_Individual_Performance m27
         = new M27_Foreseen_Individual_Performance(this.uri, ++activityCount, f);
       this.addProperty(CIDOC.P69_has_association_with, m27);
