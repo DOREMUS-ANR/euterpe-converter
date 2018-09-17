@@ -19,8 +19,7 @@ public class M27_Foreseen_Individual_Performance extends DoremusResource {
     this.setClass(MUS.M27_Foreseen_Individual_Performance);
 
     F11_Corporate_Body body = new F11_Corporate_Body(formation);
-    this.resource.addProperty(MUS.U6_foresees_actor, body.asResource());
-    this.model.add(body.getModel());
+    this.addProperty(MUS.U6_foresees_actor, body);
 
     // TODO add a role based on the label (i.e. if contains "orchestra") ?
   }
@@ -33,34 +32,30 @@ public class M27_Foreseen_Individual_Performance extends DoremusResource {
     this.isARole = true;
 
     E21_Person person = new E21_Person(intervenant);
-    this.resource.addProperty(MUS.U6_foresees_actor, person.asResource());
-    this.resource.addProperty(RDFS.comment, role, "fr");
+    this.addProperty(MUS.U6_foresees_actor, person);
+    this.addProperty(RDFS.comment, role, "fr");
 
     if ("soliste".equals(role)) {
-      this.resource.addProperty(MUS.U36_foresees_responsibility, "soliste", "fr");
+      this.addProperty(MUS.U36_foresees_responsibility, "soliste", "fr");
       return;
     }
 
     if ("direction".equals(role)) {
-      this.resource.addProperty(MUS.U35_foresees_function, "conductor", "en");
+      this.addProperty(MUS.U35_foresees_function, "conductor", "en");
       return;
     }
 
     Resource match = VocabularyManager.searchInCategory(role, "fr", "mop");
     if (match != null) {
-      this.resource.addProperty(MUS.U2_foresees_use_of_medium_of_performance, match);
+      this.addProperty(MUS.U2_foresees_use_of_medium_of_performance, match);
       return;
     }
 
     match = VocabularyManager.searchInCategory(role, "fr", "function");
     if (match != null) {
-      this.resource.addProperty(MUS.U35_foresees_function, match);
+      this.addProperty(MUS.U35_foresees_function, match);
       return;
     }
-
     this.isARole = false;
-
-    this.model.add(person.model);
-
   }
 }
