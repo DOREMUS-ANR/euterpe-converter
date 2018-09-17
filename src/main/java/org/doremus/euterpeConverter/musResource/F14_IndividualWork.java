@@ -6,7 +6,7 @@ import org.doremus.ontology.FRBROO;
 public class F14_IndividualWork extends DoremusResource {
 
   public F14_IndividualWork(Oeuvre o) {
-    super(o.id);
+    super(o.getId());
     this.setClass(FRBROO.F14_Individual_Work);
   }
 

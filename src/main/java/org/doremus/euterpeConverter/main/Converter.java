@@ -35,6 +35,14 @@ public class Converter {
 
   public static void main(String[] args) throws IOException {
     loadProperties();
+    inputFolderPath = properties.getProperty("src");
+    outputFolderPath = properties.getProperty("out");
+
+    String geonamesFolder = Paths.get(outputFolderPath, "place", "geonames").toString();
+    //noinspection ResultOfMethodCallIgnored
+    new File(geonamesFolder).mkdirs();
+    GeoNames.setDestFolder(geonamesFolder);
+
     GeoNames.loadCache();
     GeoNames.setUser(properties.getProperty("geonames_user"));
 
@@ -43,10 +51,6 @@ public class Converter {
     ClassLoader classLoader = Converter.class.getClassLoader();
     VocabularyManager.setVocabularyFolder(classLoader.getResource("vocabulary").getPath());
     VocabularyManager.init(classLoader.getResource("property2family.csv"));
-
-
-    inputFolderPath = properties.getProperty("src");
-    outputFolderPath = properties.getProperty("out");
 
     maxFilesInFolder = Integer.parseInt(properties.getProperty("maxFilesInAFolder", "1000"));
     filesInCurrentFolder = 0;
@@ -119,12 +123,12 @@ public class Converter {
     for (Evenement ev : ef.getEvenments()) {
       // if(!(ev.id.equals("6570"))) continue;
       if (!ev.isAConcert()) continue;
-      System.out.println(ev.id);
+      System.out.println(ev.getId());
 
       try {
         M26_Foreseen_Performance concert = M26_Foreseen_Performance.from(ev);
         if (!modifiedOut) modifiedOut = addModified(concert.getModel());
-        writeTtl(concert.getModel(), ev.id);
+        writeTtl(concert.getModel(), ev.getId());
 
       } catch (Exception e) {
         e.printStackTrace();

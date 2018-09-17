@@ -5,13 +5,11 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.OWL;
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
 import org.doremus.euterpeConverter.main.ISNIWrapper;
 import org.doremus.euterpeConverter.main.Utils;
-import org.doremus.euterpeConverter.sources.Compositeur;
-import org.doremus.euterpeConverter.sources.Intervenant;
+import org.doremus.euterpeConverter.sources.Artist;
 import org.doremus.isnimatcher.ISNIRecord;
 import org.doremus.ontology.CIDOC;
 import org.doremus.ontology.Schema;
@@ -22,15 +20,8 @@ import java.net.URISyntaxException;
 public class E21_Person extends DoremusResource {
   private String id, label;
 
-  public E21_Person(Compositeur record) {
-    this.id = record.id;
-    this.label = record.label;
-
-    createPerson();
-  }
-
-  public E21_Person(Intervenant record) {
-    this.id = record.id;
+  public E21_Person(Artist record) {
+    this.id = record.getId();
     this.label = record.getLabel();
     if (this.label.isEmpty())
       throw new RuntimeException("Empty Person name");
@@ -52,7 +43,7 @@ public class E21_Person extends DoremusResource {
 
   private Resource initResource() {
     this.resource = model.createResource(this.uri.toString());
-    resource.addProperty(RDF.type, CIDOC.E21_Person);
+    this.setClass(CIDOC.E21_Person);
 
     addProperty(FOAF.name, this.label);
     addProperty(RDFS.label, this.label);

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Evenement {
   @XmlElement
-  public String id;
+  private String id;
   @XmlElement
   public String etablissement;
   @XmlElement
@@ -48,7 +48,7 @@ public class Evenement {
     @XmlElement(name = "intervenant", type = Intervenant.class),
     @XmlElement(name = "formation", type = Formation.class)
   })
-  public List<Performer> performers;
+  public List<Artist> performers;
 
   public boolean isAConcert() {
     return activite.indexOf("concert") > -1 || activite.indexOf("concert éducatif") > -1;
@@ -76,5 +76,9 @@ public class Evenement {
     if (input != null) return input;
     return new ArrayList<>();
 
+  }
+
+  public String getId() {
+    return "e" + id;
   }
 }

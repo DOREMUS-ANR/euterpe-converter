@@ -1,4 +1,4 @@
 package org.doremus.euterpeConverter.sources;
 
-public class Formation extends Performer {
+public class Formation extends Artist {
 }

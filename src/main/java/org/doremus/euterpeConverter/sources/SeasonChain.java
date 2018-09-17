@@ -18,8 +18,6 @@ public class SeasonChain {
 
 
   public static List<SeasonChain> init(File csv) {
-    ClassLoader cl = ClassLoader.getSystemClassLoader();
-
     try {
       return new CsvToBeanBuilder<>(new FileReader(csv)).withType(SeasonChain.class).build().parse();
     } catch (FileNotFoundException e) {

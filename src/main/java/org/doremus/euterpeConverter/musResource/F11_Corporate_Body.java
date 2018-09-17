@@ -12,7 +12,7 @@ import org.doremus.ontology.FRBROO;
 public class F11_Corporate_Body extends DoremusResource {
 
   public F11_Corporate_Body(Formation formation) {
-    super(formation.id);
+    super(formation.getId());
     String name = formation.getLabel();
 
     Resource r = getFromDoremus(name);

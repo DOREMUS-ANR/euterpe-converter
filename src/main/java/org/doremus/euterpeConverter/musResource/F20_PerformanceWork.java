@@ -6,7 +6,7 @@ import org.doremus.ontology.FRBROO;
 public class F20_PerformanceWork extends DoremusResource {
 
   public F20_PerformanceWork(Evenement ev) {
-    super(ev.id);
+    super(ev.getId());
     this.setClass(FRBROO.F20_Performance_Work);
   }
 

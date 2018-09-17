@@ -12,8 +12,8 @@ public class F28_ExpressionCreation extends DoremusResource {
 
   public F28_ExpressionCreation(Oeuvre oeuvre) {
     // Creation of a Work
-    super(oeuvre.id);
-    this.resource.addProperty(RDF.type, FRBROO.F28_Expression_Creation);
+    super(oeuvre.getId());
+    this.setClass(FRBROO.F28_Expression_Creation);
 
     int ipCount = 0;
     String function = oeuvre.compositeur.size() > 1 ? "créateur" : "compositeur";
@@ -21,7 +21,7 @@ public class F28_ExpressionCreation extends DoremusResource {
     for (Compositeur composer : oeuvre.compositeur) {
       String activityUri = this.uri + "/activity/" + ++ipCount;
       E21_Person artist = new E21_Person(composer);
-      this.resource.addProperty(CIDOC.P9_consists_of,
+      this.addProperty(CIDOC.P9_consists_of,
         model.createResource(activityUri)
           .addProperty(RDF.type, CIDOC.E7_Activity)
           .addProperty(CIDOC.P14_carried_out_by, artist.asResource())
@@ -34,9 +34,7 @@ public class F28_ExpressionCreation extends DoremusResource {
 
   public F28_ExpressionCreation(Evenement ev) {
     // Creation of a Performance plan
-    super(ev.id);
-    this.resource.addProperty(RDF.type, FRBROO.F28_Expression_Creation);
-
-
+    super(ev.getId());
+    this.setClass(FRBROO.F28_Expression_Creation);
   }
 }

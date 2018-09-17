@@ -3,11 +3,11 @@ package org.doremus.euterpeConverter.sources;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
-public abstract class Performer {
+public abstract class Artist {
   //<intervenant id="5934" libelle="Iván Fischer" role="direction"/>
 
   @XmlAttribute(name = "id")
-  public String id;
+  private String id;
 
   @XmlValue
   private String label;
@@ -25,5 +25,9 @@ public abstract class Performer {
     else if (label2 != null && !label2.isEmpty())
       return label2.trim();
     else return null;
+  }
+
+  public String getId() {
+    return "p" + id;
   }
 }

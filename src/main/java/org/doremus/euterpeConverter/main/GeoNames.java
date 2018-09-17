@@ -1,6 +1,9 @@
 package org.doremus.euterpeConverter.main;
 
-import org.geonames.*;
+import org.geonames.Toponym;
+import org.geonames.ToponymSearchCriteria;
+import org.geonames.ToponymSearchResult;
+import org.geonames.WebService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,9 +13,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class GeoNames {
   static Map<String, Integer> cache; // cache label -> idGeoNames
@@ -83,9 +84,10 @@ public class GeoNames {
 
     try {
       ToponymSearchResult searchResult = WebService.search(searchCriteria);
-      if (searchResult.getToponyms().size() > 0)
+      if (searchResult.getToponyms().size() > 0) {
         tp = searchResult.getToponyms().get(0);
-
+        downloadRdf(tp.getGeoNameId());
+      }
       addToCache(fullLabel, tp != null ? tp.getGeoNameId() : -1);
     } catch (Exception e) {
       e.printStackTrace();
@@ -132,17 +134,29 @@ public class GeoNames {
   }
 
   private static void saveCache() {
-    Properties properties = new Properties();
-
-    for (Map.Entry<String, Integer> entry : cache.entrySet()) {
+    SortedProperties properties = new SortedProperties();
+    for (Map.Entry<String, Integer> entry : cache.entrySet())
       properties.put(entry.getKey(), entry.getValue() + "");
-    }
 
     try {
       properties.store(new FileOutputStream("places.properties"), null);
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private static class SortedProperties extends Properties {
+    public Enumeration keys() {
+      Enumeration keysEnum = super.keys();
+      Vector<String> keyList = new Vector<>();
+      while (keysEnum.hasMoreElements()) {
+        keyList.add((String) keysEnum.nextElement());
+      }
+      Collections.sort(keyList);
+      return keyList.elements();
+    }
 
   }
 }
+
+

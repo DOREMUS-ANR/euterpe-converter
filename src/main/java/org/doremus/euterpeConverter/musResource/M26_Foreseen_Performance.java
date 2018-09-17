@@ -3,7 +3,7 @@ package org.doremus.euterpeConverter.musResource;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.sparql.vocabulary.FOAF;
-import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.doremus.euterpeConverter.main.ConstructURI;
@@ -26,14 +26,14 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
   public M26_Foreseen_Performance(String identifier) {
     super(identifier);
-    this.resource.addProperty(RDF.type, MUS.M26_Foreseen_Performance);
+    this.setClass(MUS.M26_Foreseen_Performance);
   }
 
   public static M26_Foreseen_Performance from(Evenement ev) {
-    M26_Foreseen_Performance fp = new M26_Foreseen_Performance(ev.id);
+    M26_Foreseen_Performance fp = new M26_Foreseen_Performance(ev.getId());
     fp.parse(ev);
-    fp.addProvenance(ev.id);
-    fp.resource.addProperty(DCTerms.identifier, ev.id);
+    fp.addProvenance(ev.getId());
+    fp.addProperty(DC.identifier, ev.getId());
     return fp;
   }
 
@@ -65,18 +65,16 @@ public class M26_Foreseen_Performance extends DoremusResource {
   }
 
   private void parse(Evenement ev) {
-
-    this.resource
-      .addProperty(DCTerms.identifier, ev.id)
+    this.addProperty(DC.identifier, ev.getId())
       .addProperty(CIDOC.P102_has_title, ev.titre_ligne1)
       .addProperty(RDFS.label, ev.titre_ligne1);
 
     for (String act : ev.activite)
-      this.resource.addProperty(CIDOC.P2_has_type, act, "fr");
+      this.addProperty(CIDOC.P2_has_type, act, "fr");
 
     // TODO make a resource ?
     for (String t : ev.activite)
-      this.resource.addProperty(CIDOC.P2_has_type, t, "fr");
+      this.addProperty(CIDOC.P2_has_type, t, "fr");
 
     E53_Place p1 = new E53_Place(ev.etablissement, "etablissement");
     E53_Place p2 = new E53_Place(ev.lieu, "lieu");
@@ -89,9 +87,9 @@ public class M26_Foreseen_Performance extends DoremusResource {
     } else this.addProperty(MUS.U7_foresees_place_at, p1);
 
     if (!ev.titre_ligne2.isEmpty())
-      this.resource.addProperty(MUS.U67_has_subtitle, ev.titre_ligne2);
+      this.addProperty(MUS.U67_has_subtitle, ev.titre_ligne2);
 
-    this.resource.addProperty(FOAF.isPrimaryTopicOf, model.createResource(ev.lien_web.trim()));
+    this.addProperty(FOAF.isPrimaryTopicOf, model.createResource(ev.lien_web.trim()));
 
     // Notes
     this.addNote(ev.description);
@@ -108,8 +106,7 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
       M27_Foreseen_Individual_Performance m27
         = new M27_Foreseen_Individual_Performance(this.uri, ++activityCount, f);
-      resource.addProperty(CIDOC.P69_has_association_with, m27.asResource());
-      this.model.add(m27.getModel());
+      this.addProperty(CIDOC.P69_has_association_with, m27);
     }
 
     M27_Foreseen_Individual_Performance oldM27 = null;
@@ -131,20 +128,17 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
         if (!fromMuseum && !m27.isARole) {
           M27_Foreseen_Individual_Performance target = (oldM27 == null) ? m27 : oldM27;
-          target.asResource().addProperty(MUS.U37_foresees_performing_character, role, "fr");
+          target.addProperty(MUS.U37_foresees_performing_character, role, "fr");
           if (oldM27 == null) continue;
         }
         oldM27 = m27;
-        resource.addProperty(CIDOC.P69_has_association_with, m27.asResource());
-        this.model.add(m27.getModel());
+        this.addProperty(CIDOC.P69_has_association_with, m27);
       }
     }
 
     // Performance Plan
     F25_Performance_Plan performancePlan = F25_Performance_Plan.from(ev);
-    resource.addProperty(MUS.U77_foresees_performing_plan, performancePlan.asResource());
-    this.model.add(performancePlan.model);
-
+    this.addProperty(MUS.U77_foresees_performing_plan, performancePlan);
   }
 
 
@@ -156,7 +150,6 @@ public class M26_Foreseen_Performance extends DoremusResource {
       e.printStackTrace();
     }
     this.timeSpan = new E52_TimeSpan(tsUri, d, null);
-    this.resource.addProperty(MUS.U8_foresees_time_span, this.timeSpan.asResource());
-    this.model.add(this.timeSpan.getModel());
+    this.addProperty(MUS.U8_foresees_time_span, this.timeSpan);
   }
 }

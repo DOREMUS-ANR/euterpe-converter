@@ -9,7 +9,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Oeuvre {
   @XmlElement
-  public String id;
+  private String id;
   @XmlElement
   public String titre;
 
@@ -17,5 +17,9 @@ public class Oeuvre {
   @XmlElement
   public List<Compositeur> compositeur;
 
+
+  public String getId() {
+    return "w" + id;
+  }
 
 }
