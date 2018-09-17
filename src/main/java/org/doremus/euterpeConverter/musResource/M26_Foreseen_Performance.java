@@ -114,7 +114,6 @@ public class M26_Foreseen_Performance extends DoremusResource {
 
     M27_Foreseen_Individual_Performance oldM27 = null;
     for (Intervenant i : ev.getIntervenants()) {
-      System.out.println(i.getLabel());
       for (String role : i.role.split(",")) {
         role = role.trim();
 

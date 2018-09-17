@@ -16,17 +16,11 @@ import org.doremus.isnimatcher.ISNIRecord;
 import org.doremus.ontology.CIDOC;
 import org.doremus.ontology.Schema;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 public class E21_Person extends DoremusResource {
   private String id, label;
-  private static HashMap<String, String> cache = null;
 
   public E21_Person(Compositeur record) {
     this.id = record.id;
@@ -47,7 +41,6 @@ public class E21_Person extends DoremusResource {
   private void createPerson() {
     try {
       this.uri = ConstructURI.build("ppe", "E21_Person", this.id);
-      interlink();
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
@@ -65,41 +58,6 @@ public class E21_Person extends DoremusResource {
     addProperty(RDFS.label, this.label);
 
     return resource;
-  }
-
-  private static void loadCache() {
-    cache = new HashMap<>();
-    try {
-      FileInputStream fis = new FileInputStream("person.properties");
-      Properties properties = new Properties();
-      properties.load(fis);
-
-      for (String key : properties.stringPropertyNames()) {
-        cache.put(key, properties.get(key).toString());
-      }
-    } catch (IOException e) {
-      System.out.println("No 'person.properties' file found. I will create it.");
-    }
-
-  }
-
-  private static void addToCache(String key, String value) {
-    cache.put(key, value);
-    saveCache();
-  }
-
-  private static void saveCache() {
-    Properties properties = new Properties();
-
-    for (Map.Entry<String, String> entry : cache.entrySet()) {
-      properties.put(entry.getKey(), entry.getValue() + "");
-    }
-
-    try {
-      properties.store(new FileOutputStream("person.properties"), null);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   public void interlink() {
