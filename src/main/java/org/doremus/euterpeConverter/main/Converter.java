@@ -119,7 +119,7 @@ public class Converter {
     EuterpeFile ef = EuterpeFile.fromFile(file);
     assert ef != null;
     for (Evenement ev : ef.getEvenments()) {
-       if(!(ev.id.equals("15120"))) continue;
+//       if(!(ev.id.equals("15120"))) continue;
       if (!ev.isAConcert()) continue;
       System.out.println(ev.getId());
 
