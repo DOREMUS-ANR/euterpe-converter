@@ -13,7 +13,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
 
   @Override
   public Date unmarshal(String v) throws Exception {
-    if ((v.charAt(0) + "").matches("(?i)a-z")) {
+    if (v.matches("(?i)[a-z].+")) {
       //    <date>vendredi 14/10/2016, 20:30</date>
       v = v.split(" ", 2)[1];
     }
